@@ -1,2 +1,2 @@
 # BgCrop
-Automatic image background croppign tool
+Automatic image background cropping tool
