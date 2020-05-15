@@ -69,11 +69,15 @@ def imgCrop(img):
     crp = img.crop((0+xcrop,0+ycrop,w-wcrop,h-hcrop))
     return crp
 
-path = os.path.abspath(os.path.dirname((__file__)))
-images = os.listdir(path+"\\Photos\\")
-currImg = ''
-for image in images:
-    photo = path + "\\Photos\\" + image
-    img = Image.open(photo)
-    crpImg = imgCrop(img)
-    crpImg.save(path + "\\Cropped\\" + re.sub(".jpg","",image) + "_crp.jpg")
+def main():
+    path = os.path.abspath(os.path.dirname((__file__)))
+    images = os.listdir(path+"\\Photos\\")
+    currImg = ''
+    for image in images:
+        photo = path + "\\Photos\\" + image
+        img = Image.open(photo)
+        crpImg = imgCrop(img)
+        crpImg.save(path + "\\Cropped\\" + re.sub(".jpg","",image) + "_crp.jpg")
+
+if __name__ == "__main__":
+    main()
