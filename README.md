@@ -7,9 +7,10 @@ This was developed for my father-in-law, who scans alot of old family photos, an
 each and every photo.
 
 # How to use:
-1. place all the photos you want to crop in the "BgCrop\Photos" folder. 
-2. double-click BgCrop.py
-3. Now all of your photos are cropped and placed in the "BgCrop\Cropped\" folder.
+1. In the BgCrop folder, create the folders "Photos" and "Cropped".
+2. place all the photos you want to crop in the "BgCrop\Photos" folder.
+3. double-click BgCrop.py
+4. Now all of your photos are cropped and placed in the "BgCrop\Cropped\" folder.
 
 # Dependencies:
 1. Pillow (PIL)
