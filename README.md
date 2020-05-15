@@ -1,5 +1,6 @@
 ## BgCrop
 Automatic image background cropping tool.
+
 NOTE: This tool was designed to remove white background only.
 
 This was developed for my father-in-law, who scans alot of old family photos, and was tired of having to crop
