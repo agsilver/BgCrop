@@ -94,7 +94,13 @@ def main():
         progress(i,len(images),"Cropping is complete!\n")
         i += 1
     end = timer()
-    print("Time taken:", round((end-start)/60,1), "minutes.\n")
+    time_taken = end-start
+    minutes = int(time_taken/60)
+    sec = int(time_taken%60)
+    if sec < 10:
+        sec = "0" + str(sec)
+    time_taken = str(minutes) + ":" + str(sec)
+    print("Time taken:", time_taken, "minutes.\n")
     exit = input("Press 'Enter' to exit...")
 
 if __name__ == "__main__":
