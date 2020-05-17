@@ -3,17 +3,29 @@ import os
 from sys import stdout
 from timeit import default_timer as timer
 import re
+import PySimpleGUI as sg
 
 
-def progress(part, whole, cmplt_msg):
-    percent_raw = round((part/whole)*100, 1)
-    percent = str(percent_raw) + "%"
-    stdout.write('\r')
-    if percent_raw == 100.0:
-        stdout.write("100.0% - " + cmplt_msg)
-    else:
-        stdout.write(percent)
-    stdout.flush()
+def GUI():
+    layout = [[sg.T('Choose source and desination folders:')],
+            [sg.T('Source:      '), sg.In(), sg.FolderBrowse()],
+            [sg.T('Destination:'), sg.In(), sg.FolderBrowse()],
+            [sg.Submit(),sg.Cancel()]]
+
+    window = sg.Window('BgCrop V1.2', layout)
+    event, values = window.read()
+    window.close()
+    return event, values
+
+# def progress(part, whole, cmplt_msg):
+#     percent_raw = round((part/whole)*100, 1)
+#     percent = str(percent_raw) + "%"
+#     stdout.write('\r')
+#     if percent_raw == 100.0:
+#         stdout.write("100.0% - " + cmplt_msg)
+#     else:
+#         stdout.write(percent)
+#     stdout.flush()
 
 
 def imgCrop(img):
@@ -75,33 +87,14 @@ def imgCrop(img):
 
 
 def main():
-    start = timer()
-    print(r"""    ____        ______               
-   / __ )____ _/ ____/________  ____ 
-  / __  / __ `/ /   / ___/ __ \/ __ \
- / /_/ / /_/ / /___/ /  / /_/ / /_/ /
-/_____/\__, /\____/_/   \____/ .___/ 
-      /____/                /_/      """)
-    print("\nWelcome to BgCrop! \nCropping in progress...")
-    path = os.path.abspath(os.path.dirname((__file__)))
-    images = os.listdir(path+"\\Photos\\")
-    i = 1
+    event, values = GUI()
+    images = os.listdir(values[0])
     for image in images:
-        photo = path + "\\Photos\\" + image
+        photo = values[0] + "\\" + image
         img = Image.open(photo)
         crpImg = imgCrop(img)
-        crpImg.save(path + "\\Cropped\\" + re.sub(".jpg","",image) + "_crp.jpg")
-        progress(i,len(images),"Cropping is complete!\n")
-        i += 1
-    end = timer()
-    time_taken = end-start
-    minutes = int(time_taken/60)
-    sec = int(time_taken%60)
-    if sec < 10:
-        sec = "0" + str(sec)
-    time_taken = str(minutes) + ":" + str(sec)
-    print("Time taken:", time_taken, "minutes.\n")
-    exit = input("Press 'Enter' to exit...")
+        crpImg.save(values[1] + "\\" + re.sub(".jpg","",image) + "_crp.jpg")
+
 
 if __name__ == "__main__":
     main()
