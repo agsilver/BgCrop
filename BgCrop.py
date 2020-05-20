@@ -6,7 +6,18 @@ import re
 import PySimpleGUI as sg
 
 
-def GUI():
+def main_GUI():
+    layout = [[sg.T('Choose an action:')],
+    [sg.B("Crop Background")],
+    [sg.B("Sort by direction")]]
+
+    window = sg.Window('BgCrop V1.2', layout)
+    event, values = window.read()
+    window.close()
+    return event, values
+
+
+def bgcrop_GUI():
     layout = [[sg.T('Choose source and desination folders:')],
             [sg.T('Source:      '), sg.In(), sg.FolderBrowse()],
             [sg.T('Destination:'), sg.In(), sg.FolderBrowse()],
@@ -17,15 +28,13 @@ def GUI():
     window.close()
     return event, values
 
-# def progress(part, whole, cmplt_msg):
-#     percent_raw = round((part/whole)*100, 1)
-#     percent = str(percent_raw) + "%"
-#     stdout.write('\r')
-#     if percent_raw == 100.0:
-#         stdout.write("100.0% - " + cmplt_msg)
-#     else:
-#         stdout.write(percent)
-#     stdout.flush()
+
+def isHorizonatl(cropped_img):
+    width, height = cropped_img.size
+    if width > height:
+        return True
+    else:
+        return False
 
 
 def imgCrop(img):
@@ -87,13 +96,21 @@ def imgCrop(img):
 
 
 def main():
-    event, values = GUI()
-    images = os.listdir(values[0])
+    event, values = main_GUI() # open GUI
+    images = os.listdir(values[0]) 
     for image in images:
-        photo = values[0] + "\\" + image
+        photo = values[0] + "\\" + image 
         img = Image.open(photo)
         crpImg = imgCrop(img)
-        crpImg.save(values[1] + "\\" + re.sub(".jpg","",image) + "_crp.jpg")
+        Hdir = values[1] + "\\" + "Horizontal"
+        Vdir = values[1] + "\\" + "Vertical"
+        if isHorizonatl(crpImg):
+            newpath =  Hdir
+        else:
+            newpath = Vdir
+        if not os.path.exists(newpath): # check if the user already has the folders
+            os.makedirs(newpath) # if not, create them
+        crpImg.save(newpath + "\\" + re.sub(".jpg","",image) + "_crp.jpg")
 
 
 if __name__ == "__main__":
