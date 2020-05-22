@@ -9,21 +9,21 @@ import PySimpleGUI as sg
 def main_GUI():
     layout = [[sg.T('Choose an action:')],
     [sg.B("Crop Background")],
-    [sg.B("Sort by direction")]]
+    [sg.B("Sort By Direction")]]
 
-    window = sg.Window('BgCrop V1.2', layout)
+    window = sg.Window('BgCrop V1.3', layout)
     event, values = window.read()
     window.close()
     return event, values
 
 
-def bgcrop_GUI():
-    layout = [[sg.T('Choose source and desination folders:')],
+def browse_GUI():
+    layout = [[sg.T('Choose folders:')],
             [sg.T('Source:      '), sg.In(), sg.FolderBrowse()],
             [sg.T('Destination:'), sg.In(), sg.FolderBrowse()],
             [sg.Submit(),sg.Cancel()]]
-
-    window = sg.Window('BgCrop V1.2', layout)
+            
+    window = sg.Window('BgCrop V1.3', layout)
     event, values = window.read()
     window.close()
     return event, values
@@ -41,7 +41,6 @@ def imgCrop(img):
     w, h = img.size
     limit = 230
     overshoot = 20
-    
 
     # get x coordinate
     for i in range(w-100):
@@ -96,21 +95,32 @@ def imgCrop(img):
 
 
 def main():
-    event, values = main_GUI() # open GUI
-    images = os.listdir(values[0]) 
-    for image in images:
-        photo = values[0] + "\\" + image 
-        img = Image.open(photo)
-        crpImg = imgCrop(img)
-        Hdir = values[1] + "\\" + "Horizontal"
-        Vdir = values[1] + "\\" + "Vertical"
-        if isHorizonatl(crpImg):
-            newpath =  Hdir
-        else:
-            newpath = Vdir
-        if not os.path.exists(newpath): # check if the user already has the folders
-            os.makedirs(newpath) # if not, create them
-        crpImg.save(newpath + "\\" + re.sub(".jpg","",image) + "_crp.jpg")
+    event, values = main_GUI() # open main GUI
+    # Open BgCrop
+    if event == "Crop Background": 
+        event, values = browse_GUI()
+        images = os.listdir(values[0])
+        for image in images:
+            photo = values[0] + "\\" + image 
+            img = Image.open(photo)
+            crpImg = imgCrop(img)
+            crpImg.save(values[1] + "\\" + re.sub(".jpg","",image) + "_crp.jpg")
+    # open DirSort
+    elif event == "Sort By Direction":
+        event, values = browse_GUI()
+        images = os.listdir(values[0]) 
+        for image in images:
+            photo = values[0] + "\\" + image 
+            img = Image.open(photo)
+            Hdir = values[1] + "\\" + "Horizontal"
+            Vdir = values[1] + "\\" + "Vertical"
+            if isHorizonatl(img):
+                newpath = Hdir
+            else:
+                newpath = Vdir
+            if not os.path.exists(newpath): # check if the user already has the folders
+                os.makedirs(newpath) # if not, create them
+            img.save(newpath + "\\" + image)
 
 
 if __name__ == "__main__":
